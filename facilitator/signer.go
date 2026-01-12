@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"fmt"
+	"log"
 	"math/big"
 	"strings"
 	"time"
@@ -300,16 +301,30 @@ func (s *facilitatorEvmSigner) SendTransaction(
 	to string,
 	data []byte,
 ) (string, error) {
+	log.Printf("📝 SendTransaction called: to=%s, dataLen=%d", to, len(data))
+
 	// Get nonce
 	nonce, err := s.client.PendingNonceAt(ctx, s.address)
 	if err != nil {
+		log.Printf("❌ Failed to get nonce: %v", err)
 		return "", fmt.Errorf("failed to get nonce: %w", err)
 	}
+	log.Printf("✅ Got nonce: %d", nonce)
 
 	// Get gas price
 	gasPrice, err := s.client.SuggestGasPrice(ctx)
 	if err != nil {
+		log.Printf("❌ Failed to get gas price: %v", err)
 		return "", fmt.Errorf("failed to get gas price: %w", err)
+	}
+	log.Printf("✅ Got gas price: %s wei", gasPrice.String())
+
+	// Check Facilitator balance
+	balance, err := s.client.BalanceAt(ctx, s.address, nil)
+	if err != nil {
+		log.Printf("⚠️  Failed to check balance: %v", err)
+	} else {
+		log.Printf("💰 Facilitator balance: %s wei (%.6f ETH)", balance.String(), new(big.Float).Quo(new(big.Float).SetInt(balance), big.NewFloat(1e18)))
 	}
 
 	// Create transaction with raw data
@@ -326,14 +341,18 @@ func (s *facilitatorEvmSigner) SendTransaction(
 	// Sign transaction
 	signedTx, err := types.SignTx(tx, types.LatestSignerForChainID(s.chainID), s.privateKey)
 	if err != nil {
+		log.Printf("❌ Failed to sign transaction: %v", err)
 		return "", fmt.Errorf("failed to sign transaction: %w", err)
 	}
+	log.Printf("✅ Transaction signed, hash: %s", signedTx.Hash().Hex())
 
 	// Send transaction
 	err = s.client.SendTransaction(ctx, signedTx)
 	if err != nil {
+		log.Printf("❌ Failed to send transaction: %v", err)
 		return "", fmt.Errorf("failed to send transaction: %w", err)
 	}
+	log.Printf("✅ Transaction sent successfully: %s", signedTx.Hash().Hex())
 
 	return signedTx.Hash().Hex(), nil
 }
