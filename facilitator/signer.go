@@ -25,8 +25,11 @@ import (
 )
 
 const (
-	DefaultEvmRPC = "https://sepolia.base.org"
-	DefaultSvmRPC = "https://api.devnet.solana.com"
+	// DefaultEvmRPC = "https://sepolia.base.org"
+	// DefaultSvmRPC = "https://api.devnet.solana.com"
+	DefaultEvmRPC = "https://mainnet.base.org"            // 改为主网
+	DefaultSvmRPC = "https://api.mainnet-beta.solana.com" // 改为主网
+
 )
 
 // ============================================================================

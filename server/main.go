@@ -40,24 +40,42 @@ func main() {
 		fmt.Println("   Example: https://x402.org/facilitator")
 		os.Exit(1)
 	}
-
+	cdpAPIKeyID := os.Getenv("CDP_API_KEY_ID")
+	if cdpAPIKeyID == "" {
+		fmt.Println("❌ CDP_API_KEY_ID environment variable is required")
+		os.Exit(1)
+	}
+	cdpAPIKeySecret := os.Getenv("CDP_API_KEY_SECRET")
+	if cdpAPIKeySecret == "" {
+		fmt.Println("❌ CDP_API_KEY_SECRET environment variable is required")
+		os.Exit(1)
+	}
 	// Network configuration - Base Sepolia testnet
-	evmNetwork := x402.Network("eip155:84532")
-	svmNetwork := x402.Network("solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1")
-
+	// evmNetwork := x402.Network("eip155:84532")
+	// svmNetwork := x402.Network("solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1")
+	evmNetwork2 := x402.Network("eip155:8453")
+	svmNetwork2 := x402.Network("solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp")
 	fmt.Printf("🚀 Starting Gin x402 server...\n")
 	fmt.Printf("   EVM Payee address: %s\n", evmAddress)
 	fmt.Printf("   SVM Payee address: %s\n", svmAddress)
-	fmt.Printf("   EVM Network: %s\n", evmNetwork)
-	fmt.Printf("   SVM Network: %s\n", svmNetwork)
+	fmt.Printf("   EVM Network: %s\n", evmNetwork2)
+	fmt.Printf("   SVM Network: %s\n", svmNetwork2)
 	fmt.Printf("   Facilitator: %s\n", facilitatorURL)
+	fmt.Printf("   CDP API Key ID: %s\n", cdpAPIKeyID)
+	fmt.Printf("   CDP API Key Secret: %s\n", cdpAPIKeySecret)
 
 	// Create Gin router
 	r := ginfw.Default()
 
 	// Create HTTP facilitator client
+	// facilitatorClient := x402http.NewHTTPFacilitatorClient(&x402http.FacilitatorConfig{
+	// 	URL: facilitatorURL,
+	// })
+
 	facilitatorClient := x402http.NewHTTPFacilitatorClient(&x402http.FacilitatorConfig{
-		URL: facilitatorURL,
+		URL: "https://api.cdp.coinbase.com/platform/v2/x402",
+
+		// Add auth if required
 	})
 
 	/**
@@ -173,25 +191,3 @@ func main() {
 		os.Exit(1)
 	}
 }
-
-//   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-//                                  Dload  Upload   Total   Spent    Left  Speed
-// 100     4  100     4    0     0   7142      0 --:--:-- --:--:-- --:--:--  4000
-// HTTP/1.1 402 Payment Required
-// Content-Type: application/json
-// Payment-Required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDo0MDIxL3dlYXRoZXIiLCJkZXNjcmlwdGlvbiI6IkdldCB3ZWF0aGVyIGRhdGEgZm9yIGEgY2l0eSIsIm1pbWVUeXBlIjoiYXBwbGljYXRpb24vanNvbiJ9LCJhY2NlcHRzIjpbeyJzY2hlbWUiOiJleGFjdCIsIm5ldHdvcmsiOiJlaXAxNTU6ODQ1MzIiLCJhc3NldCI6IjB4MDM2Q2JENTM4NDJjNTQyNjYzNGU3OTI5NTQxZUMyMzE4ZjNkQ0Y3ZSIsImFtb3VudCI6IjEwMDAiLCJwYXlUbyI6IjB4REI5Mzg3YjdkMUExRkMzYTRGMTdkMWI2MzU1OTg5ZTViNEU0ZTczOCIsIm1heFRpbWVvdXRTZWNvbmRzIjo2MCwiZXh0cmEiOnsibmFtZSI6IlVTREMiLCJyZXNvdXJjZVVybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDAyMS93ZWF0aGVyIiwidmVyc2lvbiI6IjIifX0seyJzY2hlbWUiOiJleGFjdCIsIm5ldHdvcmsiOiJzb2xhbmE6RXRXVFJBQlphWXE2aU1mZVlLb3VSdTE2NlZVMnhxYTEiLCJhc3NldCI6IjR6TU1DOXNydDVSaTVYMTRHQWdYaGFIaWkzR25QQUVFUllQSmdaSkRuY0RVIiwiYW1vdW50IjoiMTAwMCIsInBheVRvIjoiR1oxQWIyUU1pTHNjOGhnWVAxOWtBb1UySm1LTTMydlJkVUt5RFBhbTNIaW4iLCJtYXhUaW1lb3V0U2Vjb25kcyI6NjAsImV4dHJhIjp7ImZlZVBheWVyIjoiQ0tQS0pXTmRKRXFhODF4N0NrWjE0QlZQaVk2eTE2U3hzN293em5xdFdZcDUiLCJyZXNvdXJjZVVybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDAyMS93ZWF0aGVyIn19XX0=
-// Date: Tue, 13 Jan 2026 03:11:52 GMT
-// Content-Length: 4
-
-// null
-
-//   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-//                                  Dload  Upload   Total   Spent    Left  Speed
-// 100     4  100     4    0     0   4739      0 --:--:-- --:--:-- --:--:--  4000
-// HTTP/1.1 402 Payment Required
-// Content-Type: application/json
-// Payment-Required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cDovL2xvY2FsaG9zdDo0MDIxL3prU3Rhc2giLCJkZXNjcmlwdGlvbiI6IkdldCB3ZWF0aGVyIGRhdGEgZm9yIGEgY2l0eSIsIm1pbWVUeXBlIjoiYXBwbGljYXRpb24vanNvbiJ9LCJhY2NlcHRzIjpbeyJzY2hlbWUiOiJleGFjdCIsIm5ldHdvcmsiOiJlaXAxNTU6ODQ1MyIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwiYW1vdW50IjoiMTAwMCIsInBheVRvIjoiMHhEQjkzODdiN2QxQTFGQzNhNEYxN2QxYjYzNTU5ODllNWI0RTRlNzM4IiwibWF4VGltZW91dFNlY29uZHMiOjYwLCJleHRyYSI6eyJuYW1lIjoiVVNEIENvaW4iLCJyZXNvdXJjZVVybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDAyMS96a1N0YXNoIiwidmVyc2lvbiI6IjIifX0seyJzY2hlbWUiOiJleGFjdCIsIm5ldHdvcmsiOiJzb2xhbmE6NWV5a3Q0VXNGdjhQOE5KZFRSRXBZMXZ6cUtxWkt2ZHAiLCJhc3NldCI6IkVQakZXZGQ1QXVmcVNTcWVNMnFOMXh6eWJhcEM4RzR3RUdHa1p3eVREdDF2IiwiYW1vdW50IjoiMTAwMCIsInBheVRvIjoiR1oxQWIyUU1pTHNjOGhnWVAxOWtBb1UySm1LTTMydlJkVUt5RFBhbTNIaW4iLCJtYXhUaW1lb3V0U2Vjb25kcyI6NjAsImV4dHJhIjp7InJlc291cmNlVXJsIjoiaHR0cDovL2xvY2FsaG9zdDo0MDIxL3prU3Rhc2gifX1dfQ==
-// Date: Tue, 13 Jan 2026 03:11:55 GMT
-// Content-Length: 4
-
-// null

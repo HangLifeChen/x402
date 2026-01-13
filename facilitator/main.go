@@ -37,8 +37,8 @@ func main() {
 
 	svmPrivateKey := os.Getenv("SVM_PRIVATE_KEY")
 
-	evmNetwork := x402.Network("eip155:84532")
-	svmNetwork := x402.Network("solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1")
+	// evmNetwork := x402.Network("eip155:84532")
+	// svmNetwork := x402.Network("solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1")
 	evmNetwork2 := x402.Network("eip155:8453")
 	svmNetwork2 := x402.Network("solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp")
 
@@ -164,9 +164,9 @@ func main() {
 	})
 
 	fmt.Printf("🚀 Facilitator listening on http://localhost:%s\n", DefaultPort)
-	fmt.Printf("   EVM: %s on %s\n", evmSigner.GetAddresses()[0], evmNetwork)
+	fmt.Printf("   EVM: %s on %s\n", evmSigner.GetAddresses()[0], evmNetwork2)
 	if svmSigner != nil {
-		fmt.Printf("   SVM: %s on %s\n", svmSigner.GetAddresses(context.Background(), string(svmNetwork))[0], svmNetwork)
+		fmt.Printf("   SVM: %s on %s\n", svmSigner.GetAddresses(context.Background(), string(svmNetwork2))[0], svmNetwork2)
 	}
 	fmt.Println()
 
