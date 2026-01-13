@@ -86,6 +86,24 @@ func main() {
 			Description: "Get weather data for a city",
 			MimeType:    "application/json",
 		},
+		"GET /zkStash": {
+			Accepts: x402http.PaymentOptions{
+				{
+					Scheme:  "exact",
+					Price:   "$0.001",
+					Network: "eip155:8453",
+					PayTo:   evmAddress,
+				},
+				{
+					Scheme:  "exact",
+					Price:   "$0.001",
+					Network: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+					PayTo:   svmAddress,
+				},
+			},
+			Description: "Get weather data for a city",
+			MimeType:    "application/json",
+		},
 	}
 
 	// Apply x402 payment middleware
@@ -93,8 +111,10 @@ func main() {
 		Routes:      routes,
 		Facilitator: facilitatorClient,
 		Schemes: []ginmw.SchemeConfig{
-			ginmw.SchemeConfig{Network: "eip155:84532", Server: evm.NewExactEvmScheme()},
-			ginmw.SchemeConfig{Network: "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", Server: svm.NewExactSvmScheme()},
+			{Network: "eip155:84532", Server: evm.NewExactEvmScheme()},
+			{Network: "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", Server: svm.NewExactSvmScheme()},
+			{Network: "eip155:8453", Server: evm.NewExactEvmScheme()},
+			{Network: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp", Server: svm.NewExactSvmScheme()},
 		},
 		Timeout: 30 * time.Second,
 	}))
@@ -125,6 +145,12 @@ func main() {
 			"weather":     data["weather"],
 			"temperature": data["temperature"],
 			"timestamp":   time.Now().Format(time.RFC3339),
+		})
+	})
+
+	r.GET("/zkStash", func(c *ginfw.Context) {
+		c.JSON(http.StatusOK, ginfw.H{
+			"timestamp": time.Now().Format(time.RFC3339),
 		})
 	})
 
