@@ -1,0 +1,359 @@
+{
+  "x402Version": 1,
+  "error": "X-PAYMENT header is required",
+  "accepts": [
+    {
+      "scheme": "exact",
+      "network": "solana",
+      "maxAmountRequired": "100000",
+      "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "payTo": "GZ1Ab2QMiLsc8hgYP19kAoU2JmKM32vRdUKyDPam3Hin",
+      "resource": "https://api.zkstash.ai/memories",
+      "description": "Extract and stores new memories from a conversation.",
+      "maxTimeoutSeconds": 60,
+      "mimeType": "application/json",
+      "outputSchema": {
+        "input": {
+          "type": "object",
+          "method": "POST",
+          "properties": {
+            "agentId": {
+              "type": "string"
+            },
+            "subjectId": {
+              "type": "string"
+            },
+            "threadId": {
+              "type": "string"
+            },
+            "schemas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "conversation": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "user",
+                      "human",
+                      "assistant",
+                      "ai",
+                      "system"
+                    ]
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "role",
+                  "content"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "agentId"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "memories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "data": {
+                "type": "object",
+                "additionalProperties": {}
+              },
+              "id": {
+                "type": "string"
+              },
+              "ttl": {
+                "type": "string"
+              },
+              "expiresAt": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "kind",
+              "data"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "ttl": {
+          "type": "string"
+        },
+        "expiresAt": {
+          "type": "number"
+        },
+        "force": {
+          "type": "boolean"
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string"
+          },
+          "created": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "metadata": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "metadata"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "updated": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "metadata": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "metadata"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "success",
+          "created",
+          "updated"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "extra": {
+        "discoverable": true,
+        "feePayer": "D6ZhtNQ5nT9ZnTHUbqXZsTx5MH2rPFiBBggX4hY1WePM"
+      }
+    },
+    {
+      "scheme": "exact",
+      "network": "base",
+      "maxAmountRequired": "100000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "payTo": "0xDB9387b7d1A1FC3a4F17d1b6355989e5b4E4e738",
+      "resource": "https://api.zkstash.ai/memories",
+      "description": "Extract and stores new memories from a conversation.",
+      "maxTimeoutSeconds": 60,
+      "mimeType": "application/json",
+      "outputSchema": {
+        "input": {
+          "type": "object",
+          "method": "POST",
+          "properties": {
+            "agentId": {
+              "type": "string"
+            },
+            "subjectId": {
+              "type": "string"
+            },
+            "threadId": {
+              "type": "string"
+            },
+            "schemas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "conversation": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "user",
+                      "human",
+                      "assistant",
+                      "ai",
+                      "system"
+                    ]
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "role",
+                  "content"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "agentId"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "memories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "data": {
+                "type": "object",
+                "additionalProperties": {}
+              },
+              "id": {
+                "type": "string"
+              },
+              "ttl": {
+                "type": "string"
+              },
+              "expiresAt": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "kind",
+              "data"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "ttl": {
+          "type": "string"
+        },
+        "expiresAt": {
+          "type": "number"
+        },
+        "force": {
+          "type": "boolean"
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string"
+          },
+          "created": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "metadata": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "metadata"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "updated": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "metadata": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "metadata"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "success",
+          "created",
+          "updated"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "extra": {
+        "discoverable": true
+      }
+    }
+  ]
+}

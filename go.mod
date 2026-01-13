@@ -3,7 +3,8 @@ module go_code/x402
 go 1.25.5
 
 require (
-	github.com/coinbase/x402/go v0.0.0-20260109222704-be253a872d10
+	github.com/coinbase/cdp-sdk/go v0.0.0-20260112212233-562aff93699c
+	github.com/coinbase/x402/go v0.0.0-20260113042612-dc49d823765d
 	github.com/ethereum/go-ethereum v1.16.7
 	github.com/gagliardetto/solana-go v1.14.0
 	github.com/gin-gonic/gin v1.11.0
@@ -40,6 +41,7 @@ require (
 	github.com/go-playground/validator/v10 v10.27.0 // indirect
 	github.com/goccy/go-json v0.10.4 // indirect
 	github.com/goccy/go-yaml v1.18.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/holiman/uint256 v1.3.2 // indirect
