@@ -39,6 +39,8 @@ func main() {
 
 	evmNetwork := x402.Network("eip155:84532")
 	svmNetwork := x402.Network("solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1")
+	evmNetwork2 := x402.Network("eip155:8453")
+	svmNetwork2 := x402.Network("solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp")
 
 	evmSigner, err := newFacilitatorEvmSigner(evmPrivateKey, DefaultEvmRPC)
 	if err != nil {
@@ -57,17 +59,21 @@ func main() {
 	evmConfig := &evm.ExactEvmSchemeConfig{
 		DeployERC4337WithEIP6492: true,
 	}
-	facilitator.Register([]x402.Network{evmNetwork}, evm.NewExactEvmScheme(evmSigner, evmConfig))
+	// facilitator.Register([]x402.Network{evmNetwork}, evm.NewExactEvmScheme(evmSigner, evmConfig))
+	facilitator.Register([]x402.Network{evmNetwork2}, evm.NewExactEvmScheme(evmSigner, evmConfig))
 
 	// Register V1 EVM scheme with smart wallet deployment enabled
 	evmV1Config := &evmv1.ExactEvmSchemeV1Config{
 		DeployERC4337WithEIP6492: true,
 	}
-	facilitator.RegisterV1([]x402.Network{"base-sepolia"}, evmv1.NewExactEvmSchemeV1(evmSigner, evmV1Config))
+	// facilitator.RegisterV1([]x402.Network{"base-sepolia"}, evmv1.NewExactEvmSchemeV1(evmSigner, evmV1Config))
+	facilitator.RegisterV1([]x402.Network{"base-mainnet"}, evmv1.NewExactEvmSchemeV1(evmSigner, evmV1Config))
 
 	if svmSigner != nil {
-		facilitator.Register([]x402.Network{svmNetwork}, svm.NewExactSvmScheme(svmSigner))
-		facilitator.RegisterV1([]x402.Network{"solana-devnet"}, svmv1.NewExactSvmSchemeV1(svmSigner))
+		// facilitator.Register([]x402.Network{svmNetwork}, svm.NewExactSvmScheme(svmSigner))
+		// facilitator.RegisterV1([]x402.Network{"solana-devnet"}, svmv1.NewExactSvmSchemeV1(svmSigner))
+		facilitator.Register([]x402.Network{svmNetwork2}, svm.NewExactSvmScheme(svmSigner))
+		facilitator.RegisterV1([]x402.Network{"solana-mainnet"}, svmv1.NewExactSvmSchemeV1(svmSigner))
 	}
 
 	facilitator.OnAfterVerify(func(ctx x402.FacilitatorVerifyResultContext) error {
