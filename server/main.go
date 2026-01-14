@@ -68,21 +68,21 @@ func main() {
 	r := ginfw.Default()
 
 	// Create HTTP facilitator client
-	facilitatorClient := x402http.NewHTTPFacilitatorClient(&x402http.FacilitatorConfig{
-		URL: facilitatorURL,
-	})
+	// facilitatorClient := x402http.NewHTTPFacilitatorClient(&x402http.FacilitatorConfig{
+	// 	URL: facilitatorURL,
+	// })
 
 	// 创建CDP认证提供者
-	// cdpAuthProvider := &CDPAuthProvider{
-	// 	APIKeyID:     cdpAPIKeyID,
-	// 	APIKeySecret: cdpAPIKeySecret,
-	// }
+	cdpAuthProvider := &CDPAuthProvider{
+		APIKeyID:     cdpAPIKeyID,
+		APIKeySecret: cdpAPIKeySecret,
+	}
 
-	// facilitatorClient := x402http.NewHTTPFacilitatorClient(&x402http.FacilitatorConfig{
-	// 	URL:          facilitatorURL,
-	// 	AuthProvider: cdpAuthProvider,
-	// 	Timeout:      30 * time.Second,
-	// })
+	facilitatorClient := x402http.NewHTTPFacilitatorClient(&x402http.FacilitatorConfig{
+		URL:          facilitatorURL,
+		AuthProvider: cdpAuthProvider,
+		Timeout:      30 * time.Second,
+	})
 
 	/**
 	 * Configure x402 payment middleware
