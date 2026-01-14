@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"time"
@@ -101,10 +102,45 @@ func makeRequest(client *x402.X402Client, url string) error {
 	}
 	defer resp.Body.Close()
 
-	// Read response body
+	// Read response body first to check if it's empty
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	fmt.Printf("Response Status: %d %s\n", resp.StatusCode, resp.Status)
+	fmt.Printf("Response Body Length: %d bytes\n", len(bodyBytes))
+
+	// Check if response body is empty
+	if len(bodyBytes) == 0 {
+		fmt.Println("⚠️  Response body is empty")
+		// Extract payment response from headers if present
+		paymentHeader := resp.Header.Get("PAYMENT-RESPONSE")
+		if paymentHeader == "" {
+			paymentHeader = resp.Header.Get("X-PAYMENT-RESPONSE")
+		}
+
+		if paymentHeader != "" {
+			fmt.Println("\n💰 Payment Details:")
+			settleResp, err := extractPaymentResponse(resp.Header)
+			if err == nil {
+				fmt.Printf("  Transaction: %s\n", settleResp.Transaction)
+				fmt.Printf("  Network: %s\n", settleResp.Network)
+				fmt.Printf("  Payer: %s\n", settleResp.Payer)
+			} else {
+				fmt.Printf("  Payment Header: %s\n", paymentHeader[:min(100, len(paymentHeader))])
+			}
+		}
+		return nil
+	}
+
+	// Try to decode response body as JSON
 	var responseData interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&responseData); err != nil {
-		return fmt.Errorf("failed to decode response: %w", err)
+	if err := json.Unmarshal(bodyBytes, &responseData); err != nil {
+		// If JSON decoding fails, print raw response
+		fmt.Printf("⚠️  Failed to decode as JSON, showing raw response:\n")
+		fmt.Printf("  %s\n", string(bodyBytes))
+		return fmt.Errorf("failed to decode response as JSON: %w", err)
 	}
 
 	fmt.Println("✅ Response body:")
@@ -128,4 +164,12 @@ func makeRequest(client *x402.X402Client, url string) error {
 	}
 
 	return nil
+}
+
+// min returns the minimum of two integers
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }

@@ -1,13 +1,11 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/coinbase/cdp-sdk/go/auth"
 	x402 "github.com/coinbase/x402/go"
 	x402http "github.com/coinbase/x402/go/http"
 	ginmw "github.com/coinbase/x402/go/http/gin"
@@ -20,60 +18,6 @@ import (
 const (
 	DefaultPort = "4021"
 )
-
-// CDPAuthProvider implements AuthProvider for Coinbase CDP API
-type CDPAuthProvider struct {
-	APIKeyID     string
-	APIKeySecret string
-}
-
-func (a *CDPAuthProvider) GetAuthHeaders(ctx context.Context) (x402http.AuthHeaders, error) {
-	// Generate JWT for /supported endpoint
-	supportedJWT, err := generateCDPJWT(a.APIKeyID, a.APIKeySecret, "GET", "api.cdp.coinbase.com", "/platform/v2/x402/supported")
-	if err != nil {
-		return x402http.AuthHeaders{}, fmt.Errorf("failed to generate JWT: %w", err)
-	}
-
-	// Generate JWT for /verify endpoint
-	verifyJWT, err := generateCDPJWT(a.APIKeyID, a.APIKeySecret, "POST", "api.cdp.coinbase.com", "/platform/v2/x402/verify")
-	if err != nil {
-		return x402http.AuthHeaders{}, fmt.Errorf("failed to generate JWT: %w", err)
-	}
-
-	// Generate JWT for /settle endpoint
-	settleJWT, err := generateCDPJWT(a.APIKeyID, a.APIKeySecret, "POST", "api.cdp.coinbase.com", "/platform/v2/x402/settle")
-	if err != nil {
-		return x402http.AuthHeaders{}, fmt.Errorf("failed to generate JWT: %w", err)
-	}
-
-	return x402http.AuthHeaders{
-		Supported: map[string]string{
-			"Authorization": "Bearer " + supportedJWT,
-		},
-		Verify: map[string]string{
-			"Authorization": "Bearer " + verifyJWT,
-		},
-		Settle: map[string]string{
-			"Authorization": "Bearer " + settleJWT,
-		},
-	}, nil
-}
-
-// generateCDPJWT generates a JWT token for CDP API authentication
-func generateCDPJWT(keyID, keySecret, method, host, path string) (string, error) {
-	jwt, err := auth.GenerateJWT(auth.JwtOptions{
-		KeyID:         keyID,
-		KeySecret:     keySecret,
-		RequestMethod: method,
-		RequestHost:   host,
-		RequestPath:   path,
-		ExpiresIn:     120, // 2 minutes
-	})
-	if err != nil {
-		return "", err
-	}
-	return jwt, nil
-}
 
 func main() {
 	godotenv.Load()
@@ -124,21 +68,21 @@ func main() {
 	r := ginfw.Default()
 
 	// Create HTTP facilitator client
-	// facilitatorClient := x402http.NewHTTPFacilitatorClient(&x402http.FacilitatorConfig{
-	// 	URL: facilitatorURL,
-	// })
+	facilitatorClient := x402http.NewHTTPFacilitatorClient(&x402http.FacilitatorConfig{
+		URL: facilitatorURL,
+	})
 
 	// 创建CDP认证提供者
-	cdpAuthProvider := &CDPAuthProvider{
-		APIKeyID:     cdpAPIKeyID,
-		APIKeySecret: cdpAPIKeySecret,
-	}
+	// cdpAuthProvider := &CDPAuthProvider{
+	// 	APIKeyID:     cdpAPIKeyID,
+	// 	APIKeySecret: cdpAPIKeySecret,
+	// }
 
-	facilitatorClient := x402http.NewHTTPFacilitatorClient(&x402http.FacilitatorConfig{
-		URL:          facilitatorURL,
-		AuthProvider: cdpAuthProvider,
-		Timeout:      30 * time.Second,
-	})
+	// facilitatorClient := x402http.NewHTTPFacilitatorClient(&x402http.FacilitatorConfig{
+	// 	URL:          facilitatorURL,
+	// 	AuthProvider: cdpAuthProvider,
+	// 	Timeout:      30 * time.Second,
+	// })
 
 	/**
 	 * Configure x402 payment middleware
