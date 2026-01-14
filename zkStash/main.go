@@ -12,7 +12,7 @@ func main() { // Load .env file if it exists
 	if err := godotenv.Load(); err != nil {
 		fmt.Println("No .env file found, using environment variables")
 	}
-	pattern := "builder-pattern"
+	pattern := "mechanism-helper-registration"
 	if len(os.Args) > 1 {
 		pattern = os.Args[1]
 	}
@@ -60,11 +60,20 @@ func main() { // Load .env file if it exists
 
 	resp, err := ZkStashClientWithPayment.CreateMemories(
 		&CreateMemoriesRequest{
-			AgentId:      "agent-007",
-			Conversation: []ConversationMessage{},
+			AgentId: "agent-007",
+			Conversation: []ConversationMessage{
+				{
+					Role:    "user",
+					Content: "My favorite color is blue.",
+				},
+				{
+					Role:    "assistant",
+					Content: "Noted.",
+				},
+			},
 		})
 	if err != nil {
-		fmt.Printf("❌ Failed to create memories: %v\n", err)
+		fmt.Printf("%v\n", err)
 		os.Exit(1)
 	}
 	fmt.Printf("✅ Response: %+v\n", resp)
