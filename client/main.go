@@ -34,7 +34,7 @@ func main() {
 		fmt.Println("No .env file found, using environment variables")
 	}
 
-	pattern := "builder-pattern"
+	pattern := "mechanism-helper-registration"
 	if len(os.Args) > 1 {
 		pattern = os.Args[1]
 	}

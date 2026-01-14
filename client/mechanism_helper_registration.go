@@ -32,7 +32,9 @@ func createMechanismHelperRegistrationClient(evmPrivateKey, svmPrivateKey string
 	// This registers:
 	// - eip155:* (all EVM networks in v2)
 	client.Register("eip155:*", evm.NewExactEvmScheme(evmSigner))
-
+	//v1 networks
+	client.Register("base-sepolia", evm.NewExactEvmScheme(evmSigner))
+	client.Register("base", evm.NewExactEvmScheme(evmSigner))
 	// Register SVM scheme if key is provided
 	if svmPrivateKey != "" {
 		svmSigner, err := svmsigners.NewClientSignerFromPrivateKey(svmPrivateKey)

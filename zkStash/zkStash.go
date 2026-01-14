@@ -143,6 +143,7 @@ func (c *ZkStashClientWithPayment) makeRequestWithResponse(method, path, body st
 		req.Header.Add(key, value)
 	}
 	resp, err := httpClient.Do(req)
+
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
