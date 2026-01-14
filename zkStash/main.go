@@ -58,9 +58,14 @@ func main() { // Load .env file if it exists
 	}
 	// Make the request
 
-	ZkStashClientWithPayment.CreateMemories(
+	resp, err := ZkStashClientWithPayment.CreateMemories(
 		&CreateMemoriesRequest{
-			AgentId:      "agent-id",
+			AgentId:      "agent-007",
 			Conversation: []ConversationMessage{},
 		})
+	if err != nil {
+		fmt.Printf("❌ Failed to create memories: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Printf("✅ Response: %+v\n", resp)
 }
